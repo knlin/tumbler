@@ -3,7 +3,11 @@ from random import Random
 
 class individual():
     def __init__(self,id, gender, hotness = None, threshold = None, 
-                 distance = 0.1, seed = Random(10001)):
+                 distance = None, seed = None):
+        if distance is None:
+          distance = 0.1
+        if seed is None:
+          seed = Random(10001)
         self.person_id = id
         self.gender = gender
         self.x = self.y = 0.0
@@ -51,12 +55,14 @@ class individual():
         (x1,y1) = self.pos()
         return math.sqrt((x1 - v1)**2 + (y1 - v2)**2)
     def profile(self):
-        return(self.person_id, self.gender, self.x, self.y, self.hotness)
-    def swipe(self, person_id, gender, x, y, hotness):
+        return(self.person_id, self.gender, self.x, self.y, self.hotness, self.threshold)
+    def swipe(self, person_id, gender, x, y, hotness, threshold):
         if self.distance_between(x,y)<=self.distance and self.gender != gender:
             if self.threshold >= hotness and person_id not in self.right_swipes and \
                 person_id not in self.matches:
                 self.right_swipes.append(person_id)
+                if self.hotness >= threshold:
+                  self.matches.append(person_id)
             elif person_id not in self.left_swipes and person_id not in self.matches and \
                 person_id not in self.matches:
                 self.left_swipes.append(person_id)
@@ -72,10 +78,10 @@ def main():
     print(x)
     print(y)
     print(z)
-    (a , b , c, d, e) = z.profile()
-    x.swipe(a,b,c,d,e)
-    (a , b , c, d, e) = y.profile()
-    x.swipe(a,b,c,d,e)
+    (a , b , c, d, e,f) = z.profile()
+    x.swipe(a,b,c,d,e,f)
+    (a , b , c, d, e,f) = y.profile()
+    x.swipe(a,b,c,d,e,f)
     print(x)
     x.move()
     print(x)

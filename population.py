@@ -4,7 +4,7 @@ import pandas as pd
 import random
 from random import Random
 class population():
-	def __init__(self, ratio, n, seed = Random(10001)):
+	def __init__(self, ratio, n, seed = Random(10001), distance = 0.1):
 		self.length = n
 		self.ratio = ratio
 		self.stack = np.empty( (n), dtype = object)
@@ -30,11 +30,18 @@ class population():
           #new day, decide to move people
           for i in range(self.length):
             self.stack[i].move(move_x, move_y)
+        def seek_profiles(self):
+          for i in range(self.length):
+            for j in range(self.length):
+              if i!=j:
+                (a, b, c, d, e) = self.stack[j].profile()
+                self.stack[i].swipe(a,b,c,d, e)
+                print(self.stack[i].get_left_swipes())
+
 
 def main():
-  test = population(0.5 , 10)
-  print(test.as_df())
-  test.new_day()
+  test = population(0.5 , 10, distance = 1)
+  test.seek_profiles()
   print(test.as_df())
 
 if __name__ == '__main__':

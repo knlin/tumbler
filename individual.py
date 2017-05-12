@@ -1,18 +1,26 @@
 import random, math
+from random import Random
 
 class individual():
-    def __init__(self,id, gender):
+    def __init__(self,id, gender, hotness = None, threshold = None, 
+                 distance = 0.1, seed = Random(10001)):
         self.person_id = id
         self.gender = gender
         self.x = self.y = 0.0
-        self.hotness = random.uniform(0,1)
-        self.threshold = random.uniform(0,1)
+        if hotness is None:
+          hotness = seed.uniform(0,1)
+        if threshold is None:
+          threshold = seed.uniform(0,1)
+        self.hotness = hotness
+        self.threshold = threshold
         self.matches = []
         self.right_swipes = []
         self.left_swipes = []
-        self.distance = 0.1
+        self.distance = distance
+        self.seed = seed
     def __str__(self):
-        return('person id:{} is {}. Currently lives at ({},{}). Has hotness:{} and threhold:{},    and the current list of matches {}, has left swiped {} and right swiped {}'.format(self.person_id, 
+        return('person id:{} is {}. Currently lives at ({},{}). Has hotness:{} and threhold:{}, \
+            and the current list of matches {}, has left swiped {} and right swiped {}'.format(self.person_id, 
                                 self.gender, self.x, self.y, 
                                  self.hotness, self.threshold,self.matches,
                                 self.right_swipes, self.left_swipes))
@@ -24,7 +32,11 @@ class individual():
         return(self.x, self.y)
     def get_hot(self):
         return(self.hotness)
-    def move(self, x = random.uniform(0,1), y = random.uniform(0,1)):
+    def move(self, x = None, y = None):
+        if x is None:
+          x = self.seed.uniform(0,1)
+        if y is None:
+          y = self.seed.uniform(0,1)
         self.x = x
         self.y = y
     def get_threshold(self):
@@ -52,10 +64,10 @@ class individual():
         self.matches.append(person_id)
 
 def main():
-    random.seed(10001)
-    x = individual(1,'male')
-    y = individual(2,'female')
-    z = individual(3,'female')
+    myRandom = Random(10001)
+    x = individual(1,'male', seed = myRandom)
+    y = individual(2,'female', seed = myRandom)
+    z = individual(3,'female', seed = myRandom)
 
     print(x)
     print(y)
